@@ -5,7 +5,7 @@ services:
     image: node:alpine
     user: "node"
     volumes:
-      - "./api:/var/www"  
+      - "./api:/var/www"
     ports:
       - "8888:3000"
     links:
@@ -13,6 +13,18 @@ services:
     environment:
       - URL_MONGO=mongodb://root:root@mongo
     command: /bin/sh -c "cd /var/www && ./node_modules/.bin/pm2 start startup.json --name API --no-daemon"
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+    links:
+      - mongo
+
     
   mongo:
     image: mongo:latest

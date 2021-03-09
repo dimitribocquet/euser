@@ -1,8 +1,12 @@
-module.exports = (req, res, next) => {
-    res.status(200).json({
-        data: {
-            id: 4,
-            name: 'User created 4',
-        }
-    });
+const User = require('../models/user');
+
+module.exports = async (req, res, next) => {
+    let user = new User(req.body)
+
+    try {
+        let user = await user.save();
+        return res.status(201).json(user);
+    } catch (error) {
+        return res.status(501).json(error);
+    }
 };
