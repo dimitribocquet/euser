@@ -39,4 +39,13 @@ User.pre('save', function (next) {
     next();
 });
 
+// Hide some fields when we return it
+User.method('toJSON', function () {
+    var user = this.toObject();
+    delete user.__v;
+    delete user.password;
+
+    return user;
+});
+
 module.exports = mongoose.model('User', User);
