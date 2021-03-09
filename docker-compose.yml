@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  node:
+    image: node:alpine
+    user: "node"
+    volumes:
+      - "./api:/var/www"  
+    ports:
+      - "8888:3000"
+    links:
+      - mongo
+    environment:
+      - URL_MONGO=mongodb://root:root@mongo
+    command: /bin/sh -c "cd /var/www && ./node_modules/.bin/pm2 start startup.json --name API --no-daemon"
+    
+  mongo:
+    image: mongo:latest
+    volumes:
+      - "./database/mongo/data:/data/db"
+    ports: 
+      - "27017:27017"
+    environment: 
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
