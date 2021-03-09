@@ -6,12 +6,13 @@ services:
     user: "node"
     volumes:
       - "./api:/var/www"
+      - "./.env:/var/www/.env"
     ports:
       - "8888:3000"
     links:
       - mongo
     environment:
-      - URL_MONGO=mongodb://root:root@mongo
+      - URL_MONGO=mongodb://${DB_USER}:${DB_PASSWORD}@mongo
     command: /bin/sh -c "cd /var/www && ./node_modules/.bin/pm2 start startup.json --name API --no-daemon"
 
   mongo-express:
@@ -20,8 +21,8 @@ services:
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${DB_USER}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${DB_PASSWORD}
     links:
       - mongo
 
@@ -33,5 +34,5 @@ services:
     ports: 
       - "27017:27017"
     environment: 
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD}

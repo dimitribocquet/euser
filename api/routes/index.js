@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+const authenticationRouter = require('../domains/Authentication/routes/authentication');
 const usersRouter = require('../domains/User/routes/users');
+
+const isAuthenticatedMiddleware = require('../domains/Authentication/middlewares/isAuthenticated');
+const isAdminMiddleware = require('../domains/Authentication/middlewares/isAdmin');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -13,6 +18,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.use('/users', usersRouter);
+router.use('/auth', authenticationRouter);
+router.use('/users', [isAuthenticatedMiddleware, isAdminMiddleware], usersRouter);
 
 module.exports = router;
