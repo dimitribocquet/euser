@@ -1,6 +1,7 @@
 const User = require('../../User/models/user');
-const jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
+
+const createJWTAction = require('../actions/createJWTAction')
 
 module.exports = async (req, res, next) => {
     const { email, password } = req.body;
@@ -21,12 +22,7 @@ module.exports = async (req, res, next) => {
         }
 
         // Create JWT
-        const token = jwt.sign({
-            userId: user._id
-        },
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-        );
+        const token = createJWTAction(user)
 
         // Success
         return res.status(200).json({

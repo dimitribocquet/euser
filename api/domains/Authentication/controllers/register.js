@@ -1,5 +1,5 @@
 const User = require('../../User/models/user');
-const jwt = require('jsonwebtoken');
+const createJWTAction = require('../actions/createJWTAction')
 
 module.exports = async (req, res, next) => {
     let user = new User({
@@ -13,12 +13,7 @@ module.exports = async (req, res, next) => {
         user = await user.save();
 
         // Create JWT
-        const token = jwt.sign({
-            userId: user._id
-        },
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-        );
+        const token = createJWTAction(user)
 
         // Success
         return res.status(200).json({
